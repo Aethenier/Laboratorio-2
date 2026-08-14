@@ -94,7 +94,7 @@ class ListaDoblemente:
     def imprimirAdelante(self):
         actual = self.cabeza
         while actual is not None:
-            print(actual.nombre, end=" -> ")
+            print(actual.nombre, end=" <-> ")
             actual = actual.siguiente
         print("None")
 

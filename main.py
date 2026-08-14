@@ -1,6 +1,13 @@
 ﻿import unicodedata
 
+"""
+Hecho por:
+Saúl Sáenz Vargas
+Jose Mauricio Ramirez Chinchilla
 
+Link del repositorio en GitHub:
+https://github.com/Aethenier/Laboratorio-2.git
+"""
 class Nodo:
     def __init__(self, nombre):
         self.nombre = nombre
@@ -45,7 +52,7 @@ class ListaDoblemente:
         return False
 
     @staticmethod
-    def _normalizar(nombre):
+    def ordenarListaAlfa(nombre):
         nombre = unicodedata.normalize("NFD", nombre)
         nombre = nombre.encode("ascii", "ignore").decode("ascii")
         return nombre.lower()

@@ -64,7 +64,7 @@ class ListaDoblemente:
         actual = self.cabeza.siguiente
         while actual is not None:
             temp = actual
-            while temp.anterior is not None and self._normalizar(temp.nombre) < self._normalizar(temp.anterior.nombre):
+            while temp.anterior is not None and self.ordenarListaAlfa(temp.nombre) < self.ordenarListaAlfa(temp.anterior.nombre):
                 temp.anterior.nombre, temp.nombre = temp.nombre, temp.anterior.nombre
                 temp = temp.anterior
             actual = actual.siguiente
@@ -95,8 +95,9 @@ class ListaDoblemente:
     def imprimirAdelante(self):
         actual = self.cabeza
         while actual is not None:
-            print(actual.nombre)
+            print(actual.nombre, end=" -> ")
             actual = actual.siguiente
+        print("None")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,4 @@
 ﻿import unicodedata
-from datetime import datetime
 
 
 class Nodo:
@@ -14,20 +13,17 @@ class ListaDoblemente:
         self.cabeza = None
         self.cola = None
         self.tam = 0
-        self.historial = []
         self.reporte_path = "reporte.txt"
-        self._crear_reporte()
+        self.limpiarReporte()
 
-    def _crear_reporte(self):
+    def limpiarReporte(self):
         with open(self.reporte_path, "w", encoding="utf-8") as archivo:
-            archivo.write("=== REPORTE DE ACTIVIDADES ===\n")
+            archivo.write("=== REPORTE ===\n")
 
-    def _registrar_evento(self, metodo, detalle):
-        fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        registro = f"[{fecha}] {metodo}: {detalle}\n"
-        self.historial.append(registro)
+    def registrar(self, mensaje):
+        print(mensaje)
         with open(self.reporte_path, "a", encoding="utf-8") as archivo:
-            archivo.write(registro)
+            archivo.write(mensaje + "\n")
 
     def listaVacia(self):
         return self.cabeza is None
@@ -45,23 +41,20 @@ class ListaDoblemente:
             self.cola.siguiente = nuevo
             self.cola = nuevo
         self.tam += 1
-        self._registrar_evento("insertarAlFinal", f"Se inserto '{nombre}'")
+        self.registrar(f"Se insertó '{nombre}'")
 
     def buscarNombre(self, nombre):
         posicion = 0
         actual = self.cabeza
+
         while actual is not None:
             if actual.nombre == nombre:
-                detalle = f"El nombre '{nombre}' se encontro en la posicion {posicion}"
-                print(detalle)
-                self._registrar_evento("buscarNombre", detalle)
+                self.registrar(f"El nombre '{nombre}' se encuentra en la posición {posicion}")
                 return True
             actual = actual.siguiente
             posicion += 1
 
-        detalle = f"El nombre '{nombre}' no se encontro en la lista"
-        print(detalle)
-        self._registrar_evento("buscarNombre", detalle)
+        self.registrar(f"El nombre '{nombre}' no se encontró en la lista")
         return False
 
     def buscar(self, nombre):
@@ -69,9 +62,7 @@ class ListaDoblemente:
 
     def sustituir(self, nombre_actual, nombre_nuevo):
         if self.listaVacia():
-            detalle = "La lista esta vacia, no hay elementos para sustituir"
-            print(detalle)
-            self._registrar_evento("sustituir", detalle)
+            self.registrar("La lista está vacía, no hay elementos para sustituir")
             return False
 
         actual = self.cabeza
@@ -83,14 +74,10 @@ class ListaDoblemente:
             actual = actual.siguiente
 
         if cambios > 0:
-            detalle = f"Se sustituyo '{nombre_actual}' por '{nombre_nuevo}' en {cambios} registro(s)"
-            print(detalle)
-            self._registrar_evento("sustituir", detalle)
+            self.registrar(f"Se sustituyó '{nombre_actual}' por '{nombre_nuevo}' en {cambios} registro(s)")
             return True
 
-        detalle = f"No se encontro '{nombre_actual}' para sustituir"
-        print(detalle)
-        self._registrar_evento("sustituir", detalle)
+        self.registrar(f"No se encontró '{nombre_actual}' para sustituir")
         return False
 
     @staticmethod
@@ -101,9 +88,7 @@ class ListaDoblemente:
 
     def ordenarLista(self):
         if self.cabeza is None or self.cabeza.siguiente is None:
-            detalle = "La lista no requiere ordenamiento"
-            print(detalle)
-            self._registrar_evento("ordenarLista", detalle)
+            self.registrar("La lista no requiere ordenamiento")
             return False
 
         actual = self.cabeza
@@ -115,27 +100,28 @@ class ListaDoblemente:
                 siguiente = siguiente.siguiente
             actual = actual.siguiente
 
-        detalle = "La lista fue ordenada alfabeticamente"
-        print(detalle)
-        self._registrar_evento("ordenarLista", detalle)
+        self.registrar("La lista fue ordenada alfabéticamente")
         return True
 
     def imprimirAdelante(self):
         actual = self.cabeza
+        elementos = []
+
         while actual is not None:
-            print(actual.nombre, end=" -> ")
+            elementos.append(actual.nombre)
             actual = actual.siguiente
-        print("None")
+
+        if not elementos:
+            self.registrar("La lista está vacía")
+            return
+
+        self.registrar(" -> ".join(elementos))
 
     def generarReporte(self):
-        with open(self.reporte_path, "w", encoding="utf-8") as archivo:
-            archivo.write("=== REPORTE FINAL DEL USUARIO ===\n")
-            archivo.write(f"Cantidad de eventos registrados: {len(self.historial)}\n\n")
-            archivo.write("Historial:\n")
-            for registro in self.historial:
-                archivo.write(registro)
-
-        print(f"\nReporte generado en: {self.reporte_path}")
+        mensaje = "Reporte generado"
+        print(mensaje)
+        with open(self.reporte_path, "a", encoding="utf-8") as archivo:
+            archivo.write(mensaje + "\n")
         return self.reporte_path
 
 
@@ -146,18 +132,15 @@ def cargarDesdeArchivo(lista):
                 nombre = linea.strip()
                 if nombre != "":
                     lista.insertarAlFinal(nombre)
-        detalle = f"Se cargaron {lista.getTamano()} nombres desde datos.txt"
-        print(detalle)
-        lista._registrar_evento("cargarDesdeArchivo", detalle)
+
+        lista.registrar(f"Se cargaron {lista.getTamano()} nombres desde datos.txt")
     except FileNotFoundError:
-        detalle = "No se encontro el archivo datos.txt"
-        print(detalle)
-        lista._registrar_evento("cargarDesdeArchivo", detalle)
+        lista.registrar("No se encontró el archivo datos.txt")
 
 
 def menu():
     lista = ListaDoblemente()
-    lista._registrar_evento("inicio", "Se inicio la aplicacion")
+    lista.registrar("Inicio del sistema")
 
     while True:
         print("\n===== MENU =====")
@@ -169,13 +152,13 @@ def menu():
         print("6. Generar reporte final")
         print("0. Salir")
 
-        opcion = input("Seleccione una opcion: ").strip()
+        opcion = input("Seleccione una opción: ").strip()
 
         if opcion == "1":
             cargarDesdeArchivo(lista)
         elif opcion == "2":
             if lista.listaVacia():
-                print("La lista esta vacia.")
+                lista.registrar("La lista está vacía")
             else:
                 lista.imprimirAdelante()
         elif opcion == "3":
@@ -193,11 +176,11 @@ def menu():
         elif opcion == "6":
             lista.generarReporte()
         elif opcion == "0":
-            lista._registrar_evento("salir", "El usuario salio del sistema")
+            lista.registrar("Fin del sistema")
             print("Gracias por usar el programa.")
             break
         else:
-            print("Opcion invalida, intente otra vez.")
+            lista.registrar("Opción inválida")
 
 
 if __name__ == "__main__":

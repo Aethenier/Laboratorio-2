@@ -1,3 +1,14 @@
+"""
+Hecho por:
+Saul Saenz Vargas
+Jose Mauricio Ramirez Chinchilla
+
+Link de GitHub:
+https://github.com/Aethenier/Laboratorio-2.git
+"""
+
+
+
 class nodo:
     def __init__(self, producto):
         self.producto = producto
@@ -16,7 +27,23 @@ class ListaDoblemente():
 
     def listaVacia(self):
         return self.cabeza is None
-    def 
+
+    def buscarNombre(self, producto):
+        posicion = 0
+        if self.listaVacia():
+            print("La lista esta vacia")
+            return False
+        actual = self.cabeza
+        while actual is not None:
+            if actual.producto == producto:
+                print(f"El nombre {producto} se encuentra en la posicion {posicion}")
+                return True
+            actual = actual.siguiente
+            posicion += 1
+        return False
+
+  
+ 
 
 
 

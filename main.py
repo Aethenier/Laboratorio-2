@@ -62,6 +62,29 @@ class ListaDoblemente:
                 temp = temp.anterior
             actual = actual.siguiente
 
+    def sustituir(self, posicion, palabra):
+        if self.listaVacia():
+            print("Lista vacia.")
+        actual = self.cabeza
+
+        while actual is not None:
+            if posicion < 0  or posicion >= self.tam:
+                print("Posicion invalida.")
+                return False
+
+        actual = self.cabeza
+        indice = 0
+
+        while actual is not None:
+            if indice == posicion:
+                actual.producto = palabra
+                print(f"Posicion {posicion} sustuida por '{palabra}'.")
+                return True
+            actual = actual.siguiente
+            indice += 1
+
+        return False
+
     def imprimirAdelante(self):
         actual = self.cabeza
         while actual is not None:
